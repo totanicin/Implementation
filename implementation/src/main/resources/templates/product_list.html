@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品一覧画面</title>
+</head>
+<body>
+    <h1>商品一覧画面</h1>
+    <form th:action="@{/products}" method="get">
+        <input type="text" name="search" placeholder="検索" th:value="${search}">
+        <select name="largeCategoryId">
+            <option value="">大カテゴリ</option>
+            <option th:each="category : ${largeCategories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == largeCategoryId}"></option>
+        </select>
+        <select name="mediumCategoryId">
+            <option value="">中カテゴリ</option>
+            <option th:each="category : ${mediumCategories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == mediumCategoryId}"></option>
+        </select>
+        <select name="smallCategoryId">
+            <option value="">小カテゴリ</option>
+            <option th:each="category : ${smallCategories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == smallCategoryId}"></option>
+        </select>
+        <button type="submit">検索する</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>店舗名</th>
+                <th>商品名</th>
+                <th>大カテゴリ</th>
+                <th>中カテゴリ</th>
+                <th>小カテゴリ</th>
+                <th>販売価格</th>
+                <th>在庫数</th>
+                <th>詳細を見る</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="storeProduct : ${productPage.content}">
+                <td th:text="${storeProduct.store.name}">店舗名</td>
+                <td th:text="${storeProduct.product.name}">商品名</td>
+                <td th:text="${storeProduct.product.largeCategory.name}">大カテゴリ</td>
+                <td th:text="${storeProduct.product.mediumCategory.name}">中カテゴリ</td>
+                <td th:text="${storeProduct.product.smallCategory.name}">小カテゴリ</td>
+                <td th:text="${storeProduct.retailPrice}">販売価格</td>
+                <td th:text="${storeProduct.stock}">在庫数</td>
+                <td><a th:href="@{/products/{id}(id=${storeProduct.id})}">詳細を見る</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <span th:text="'ページ ' + ${productPage.number + 1} + ' / ' + ${productPage.totalPages}"></span>
+    </div>
+    <div>
+        <ul>
+            <li th:if="${productPage.hasPrevious()}">
+                <a th:href="@{/products(size=${productPage.size}, page=${productPage.number - 1}, search=${search}, largeCategoryId=${largeCategoryId}, mediumCategoryId=${mediumCategoryId}, smallCategoryId=${smallCategoryId})}">前</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(1, productPage.totalPages)}">
+                <a th:if="${i != productPage.number + 1}" th:href="@{/products(size=${productPage.size}, page=${i - 1}, search=${search}, largeCategoryId=${largeCategoryId}, mediumCategoryId=${mediumCategoryId}, smallCategoryId=${smallCategoryId})}" th:text="${i}"></a>
+                <span th:if="${i == productPage.number + 1}" th:text="${i}"></span>
+            </li>
+            <li th:if="${productPage.hasNext()}">
+                <a th:href="@{/products(size=${productPage.size}, page=${productPage.number + 1}, search=${search}, largeCategoryId=${largeCategoryId}, mediumCategoryId=${mediumCategoryId}, smallCategoryId=${smallCategoryId})}">次</a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <a th:href="@{/orders/history}">注文履歴を見る</a>
+    </div>
+</body>
+</html>

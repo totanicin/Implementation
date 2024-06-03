@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>店舗一覧</title>
+</head>
+<body>
+    <h1>店舗一覧</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>店舗ID</th>
+                <th>店舗名</th>
+                <th>住所</th>
+                <th>詳細</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="store : ${stores}">
+                <td th:text="${store.id}">店舗ID</td>
+                <td th:text="${store.name}">店舗名</td>
+                <td th:text="${store.address}">住所</td>
+                <td>
+                    <a th:if="${store.id == userStore.id}" th:href="@{/stores/{id}(id=${store.id})}">詳細を見る</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/stores/new">新規作成</a>
+</body>
+</html>

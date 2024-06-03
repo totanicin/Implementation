@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品発注</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function getQueryParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let productId = getQueryParam("productId");
+            console.log("Order form loaded.");
+            console.log("Product ID from query param: " + productId);
+            if (productId) {
+                document.getElementById("productId").value = productId;
+                document.getElementById("productIdSpan").textContent = productId;
+            }
+        });
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <h1>商品発注</h1>
+    <p>ログイン中: 管理者 <span th:text="${adminFullName}"></span> | 店舗 <span th:text="${storeName}"></span></p>
+    <div>
+        <p>商品ID: <span id="productIdSpan" th:text="${product.id}"></span></p>
+        <p>商品名: <span th:text="${product.product.name}"></span></p>
+        <form th:action="@{/orders}" method="post">
+            <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <label for="quantity">発注数:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="1000" required>
+            <button type="submit">発注する</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品詳細画面</title>
+    <script>
+        function navigateToOrderForm(productId) {
+            console.log("発注するボタンがクリックされました。");
+            console.log("Product ID: " + productId);
+            location.href = '/orders/new?productId=' + productId;
+        }
+    </script>
+</head>
+<body>
+    <h1>商品詳細画面</h1>
+    <div>
+        <p>商品ID: <span th:text="${product.product.id}"></span></p>
+        <p>商品名: <span th:text="${product.product.name}"></span></p>
+        <p>説明: <span th:text="${product.product.description}"></span></p>
+        <p>商品画像: <img th:src="${product.product.imageUrl}" alt="商品画像"></p>
+        <p>販売価格: <span th:text="${product.retailPrice}"></span></p>
+        <p>在庫数: <span th:text="${product.stock}"></span></p>
+        <p>仕入れ原価: <span th:text="${product.product.costPrice}"></span></p>
+        <p>メーカ希望小売価格: <span th:text="${product.product.manufacturerSuggestedRetailPrice}"></span></p>
+        <p>大カテゴリ: <span th:text="${product.product.largeCategory.name}"></span></p>
+        <button type="button" th:onclick="'navigateToOrderForm(' + ${product.product.id} + ')'">発注する</button>
+    </div>
+</body>
+</html>

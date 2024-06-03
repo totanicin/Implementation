@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>店舗新規作成</title>
+</head>
+<body>
+    <h1>店舗新規作成</h1>
+    <form action="/stores" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div>
+            <label for="storeName">店舗名</label>
+            <input type="text" id="storeName" name="storeName" required />
+        </div>
+        <div>
+            <label for="address">住所</label>
+            <input type="text" id="address" name="address" required />
+        </div>
+        <button type="submit">作成する</button>
+    </form>
+    <a href="/stores">戻る</a>
+</body>
+</html>

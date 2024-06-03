@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>メーカ編集画面</title>
+</head>
+<body>
+    <h1>メーカ編集画面</h1>
+    <form th:action="@{/manufacturers/{id}/edit(id=${manufacturer.id})}" method="post">
+        <div>
+            <label for="name">メーカ名:</label>
+            <input type="text" id="name" name="name" th:value="${manufacturer.name}" required minlength="1" maxlength="255">
+        </div>
+        <div>
+            <button type="submit">更新する</button>
+        </div>
+    </form>
+    <div th:if="${message}">
+        <p style="color:red;" th:text="${message}"></p>
+    </div>
+    <a href="/manufacturers">戻る</a>
+</body>
+</html>
