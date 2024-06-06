@@ -12,8 +12,8 @@ import com.example.demo.entity.StoreProduct;
 public interface ProductService {
     Page<StoreProduct> getAllProducts(Pageable pageable);
     Page<StoreProduct> findByCriteria(String search, Long largeCategoryId, Long mediumCategoryId, Long smallCategoryId, Pageable pageable);
-    Optional<StoreProduct> getProductById(Long id); // 変更: Optionalを返す
+    Optional<StoreProduct> getProductById(Long id);
     void saveProduct(Product product);
     void updateStock(Long storeProductId, int quantity);
-    List<StoreProduct> getAllProducts(); // 追加
+    List<StoreProduct> getAllProducts(); // 引数なしのメソッドを追加
 }

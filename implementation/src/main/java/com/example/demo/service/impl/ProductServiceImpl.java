@@ -30,11 +30,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<StoreProduct> findByCriteria(String search, Long largeCategoryId, Long mediumCategoryId, Long smallCategoryId, Pageable pageable) {
-        return storeProductRepository.findAll(pageable); 
+        return storeProductRepository.findByCriteria(search, largeCategoryId, mediumCategoryId, smallCategoryId, pageable);
     }
 
     @Override
-    public Optional<StoreProduct> getProductById(Long id) { // 変更: Optionalを返す
+    public Optional<StoreProduct> getProductById(Long id) {
         return storeProductRepository.findById(id);
     }
 
@@ -48,13 +48,13 @@ public class ProductServiceImpl implements ProductService {
         Optional<StoreProduct> productOpt = storeProductRepository.findById(storeProductId);
         if (productOpt.isPresent()) {
             StoreProduct product = productOpt.get();
-            product.setStock(product.getStock() + quantity); 
+            product.setStock(product.getStock() + quantity);
             storeProductRepository.save(product);
         }
     }
 
     @Override
-    public List<StoreProduct> getAllProducts() {
+    public List<StoreProduct> getAllProducts() { // 引数なしのメソッドを実装
         return storeProductRepository.findAll();
     }
 }
