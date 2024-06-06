@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.model.Administrator;
-import com.example.demo.model.Manufacturer;
+import com.example.demo.entity.Administrator;
+import com.example.demo.entity.Manufacturer;
 import com.example.demo.repository.ManufacturerRepository;
 import com.example.demo.service.AdminService;
 

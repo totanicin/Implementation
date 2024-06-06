@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.Order;
-import com.example.demo.model.Store;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.Store;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {

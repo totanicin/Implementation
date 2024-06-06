@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.model.StoreProduct;
+import com.example.demo.entity.StoreProduct;
 import com.example.demo.repository.LargeCategoryRepository;
 import com.example.demo.repository.MediumCategoryRepository;
 import com.example.demo.repository.SmallCategoryRepository;

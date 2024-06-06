@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.model.MainCategory;
-import com.example.demo.model.MediumCategory;
-import com.example.demo.model.SubSmallCategory;
+import com.example.demo.entity.MainCategory;
+import com.example.demo.entity.MediumCategory;
+import com.example.demo.entity.SubSmallCategory;
 import com.example.demo.repository.MainCategoryRepository;
 import com.example.demo.repository.MediumCategoryRepository;
 import com.example.demo.repository.ProductCategoryRepository;

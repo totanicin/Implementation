@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.example.demo.model.Product;
-import com.example.demo.model.StoreProduct;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.StoreProduct;
 
 public interface ProductService {
     Page<StoreProduct> getAllProducts(Pageable pageable);

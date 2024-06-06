@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.model.Administrator;
-import com.example.demo.model.Permission;
+import com.example.demo.entity.Administrator;
+import com.example.demo.entity.Permission;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.PermissionService;
 import com.example.demo.service.RoleService;

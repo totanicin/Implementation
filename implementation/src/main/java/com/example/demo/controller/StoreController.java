@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.model.Administrator;
-import com.example.demo.model.Store;
+import com.example.demo.entity.Administrator;
+import com.example.demo.entity.Store;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.StoreService;
 

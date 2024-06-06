@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.model.Administrator;
-import com.example.demo.model.Order;
-import com.example.demo.model.StoreProduct;
+import com.example.demo.entity.Administrator;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.StoreProduct;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.ProductService;
 

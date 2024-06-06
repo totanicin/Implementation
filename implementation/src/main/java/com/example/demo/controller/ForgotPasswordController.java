@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.model.Administrator;
+import com.example.demo.entity.Administrator;
 import com.example.demo.repository.AdministratorRepository;
 
 @Controller
