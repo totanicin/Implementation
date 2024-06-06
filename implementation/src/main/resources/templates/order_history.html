@@ -6,6 +6,30 @@
 <body>
     <h1>商品発注履歴</h1>
     <p>ログイン中: 管理者 <span th:text="${adminFullName}"></span> | 店舗 <span th:text="${storeName}"></span></p>
+    <div th:each="store : ${stores}">
+        <h2>店舗と発注履歴の一覧</h2>
+        <p>店舗名: <span th:text="${store.name}"></span></p>
+        <p>住所: <span th:text="${store.address}"></span></p>
+        
+        <h3>商品一覧</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>販売価格</th>
+                    <th>在庫数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="storeProduct : ${store.storeProducts}">
+                    <td th:text="${storeProduct.product.name}">商品名</td>
+                    <td th:text="${storeProduct.retailPrice}">販売価格</td>
+                    <td th:text="${storeProduct.stock}">在庫数</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>発注履歴</h3>
     <table border="1">
         <thead>
             <tr>

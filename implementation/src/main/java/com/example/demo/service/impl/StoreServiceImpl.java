@@ -22,6 +22,11 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public List<Store> getAllStoresWithProducts() {
+        return storeRepository.findAllStoresWithProducts();
+    }
+
+    @Override
     public Optional<Store> getStoreById(Long id) {
         return storeRepository.findById(id);
     }

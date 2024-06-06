@@ -7,6 +7,7 @@ import com.example.demo.entity.Store;
 
 public interface StoreService {
     List<Store> getAllStores();
+    List<Store> getAllStoresWithProducts(); // 追加
     Optional<Store> getStoreById(Long id);
     Store createStore(Store store);
     Store updateStore(Store store);

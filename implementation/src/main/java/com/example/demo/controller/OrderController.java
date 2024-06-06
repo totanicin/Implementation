@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
-import java.util.List; // ここを追加
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Administrator;
 import com.example.demo.entity.Order;
+import com.example.demo.entity.Store;
 import com.example.demo.entity.StoreProduct;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.ProductService;
+import com.example.demo.service.StoreService;
 
 @Controller
 @RequestMapping("/orders")
@@ -29,13 +31,16 @@ public class OrderController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private StoreService storeService;
+
     @GetMapping("/new")
     public String newOrderForm(@RequestParam("productId") Long productId, Model model, Principal principal) {
         Optional<StoreProduct> productOpt = productService.getProductById(productId);
         if (productOpt.isPresent()) {
             StoreProduct product = productOpt.get();
             Order order = new Order();
-            order.setProduct(product.getProduct()); // StoreProductの内部のProductを取得
+            order.setProduct(product.getProduct());
             model.addAttribute("order", order);
             model.addAttribute("product", product);
 
@@ -45,13 +50,11 @@ public class OrderController {
                 model.addAttribute("adminFullName", admin.getFirstName() + " " + admin.getLastName());
                 model.addAttribute("storeName", admin.getStore().getName());
             } else {
-                // 管理者が見つからない場合の処理
                 return "error/500";
             }
 
             return "order_form";
         } else {
-            // 商品が見つからない場合の処理
             return "error/404";
         }
     }
@@ -64,21 +67,16 @@ public class OrderController {
             Optional<StoreProduct> productOpt = productService.getProductById(productId);
             if (productOpt.isPresent()) {
                 StoreProduct product = productOpt.get();
-                order.setProduct(product.getProduct()); // StoreProductの内部のProductを取得
+                order.setProduct(product.getProduct());
                 order.setAdmin(admin);
                 order.setStore(admin.getStore());
                 orderService.saveOrder(order);
-
-                // 在庫数を更新
                 productService.updateStock(productId, order.getQuantity());
-
                 return "redirect:/orders/history";
             } else {
-                // 商品が見つからない場合の処理
                 return "error/404";
             }
         } else {
-            // 管理者が見つからない場合の処理
             return "error/500";
         }
     }
@@ -89,12 +87,13 @@ public class OrderController {
         Administrator admin = orderService.findAdminByUsername(username);
         if (admin != null) {
             List<Order> orders = orderService.getOrdersByStore(admin.getStore());
+            List<Store> stores = List.of(admin.getStore()); // ログインユーザーの所属店舗だけ取得
             model.addAttribute("orders", orders);
+            model.addAttribute("stores", stores); // ログインユーザーの店舗をモデルに追加
             model.addAttribute("adminFullName", admin.getFirstName() + " " + admin.getLastName());
             model.addAttribute("storeName", admin.getStore().getName());
             return "order_history";
         } else {
-            // 管理者が見つからない場合の処理
             return "error/500";
         }
     }

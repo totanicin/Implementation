@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<StoreProduct> findByCriteria(String search, Long largeCategoryId, Long mediumCategoryId, Long smallCategoryId, Pageable pageable) {
-        // TODO: カスタムクエリを実装する
-        return storeProductRepository.findAll(pageable); // 簡略化のための例
+        return storeProductRepository.findAll(pageable); 
     }
 
     @Override
-    public Optional<StoreProduct> getProductById(Long id) {
+    public Optional<StoreProduct> getProductById(Long id) { // 変更: Optionalを返す
         return storeProductRepository.findById(id);
     }
 
@@ -48,8 +48,13 @@ public class ProductServiceImpl implements ProductService {
         Optional<StoreProduct> productOpt = storeProductRepository.findById(storeProductId);
         if (productOpt.isPresent()) {
             StoreProduct product = productOpt.get();
-            product.setStock(product.getStock() + quantity); // 在庫数を発注数だけ増加させる
+            product.setStock(product.getStock() + quantity); 
             storeProductRepository.save(product);
         }
+    }
+
+    @Override
+    public List<StoreProduct> getAllProducts() {
+        return storeProductRepository.findAll();
     }
 }

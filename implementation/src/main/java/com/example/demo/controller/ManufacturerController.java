@@ -27,7 +27,7 @@ public class ManufacturerController {
 
     @Autowired
     private ManufacturerRepository manufacturerRepository;
-    
+
     @Autowired
     private AdminService adminService;
 
