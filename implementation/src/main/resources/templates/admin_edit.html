@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>管理者編集</title>
 </head>
@@ -7,7 +7,6 @@
     <h1>管理者編集</h1>
     <form th:action="@{/admin/update}" th:object="${admin}" method="post">
         <input type="hidden" th:field="*{id}" />
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
         <div>
             <label>店舗名</label>
             <select th:field="*{store.id}">
@@ -44,7 +43,7 @@
         </div>
         <div>
             <label>パスワード</label>
-            <input type="password" th:field="*{password}" />
+            <input type="password" th:field="*{password}" maxlength="65" />
         </div>
         <button type="submit">更新する</button>
     </form>

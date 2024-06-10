@@ -34,7 +34,7 @@ public class Administrator {
     @Size(min = 5, max = 255)
     private String email;
 
-    @Size(min = 1, max = 255)
+    @Size(min = 8, max = 64) // パスワードのバリデーションを変更
     private String password;
 
     @NotBlank

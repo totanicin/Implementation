@@ -1,21 +1,22 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
-import java.util.List; // ここを追加
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany; // ここを追加
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "stores") // ここでテーブル名を指定
+@Table(name = "stores")
 @Data
 public class Store {
 
@@ -23,13 +24,17 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // storeName から name に変更
+    @NotBlank(message = "店舗名は必須です")
+    private String name;
+
+    @NotBlank(message = "住所は必須です")
     private String address;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "store") // ここを追加
-    private List<StoreProduct> storeProducts; // ここを追加
+    @OneToMany(mappedBy = "store")
+    private List<StoreProduct> storeProducts;
 
     @PrePersist
     protected void onCreate() {

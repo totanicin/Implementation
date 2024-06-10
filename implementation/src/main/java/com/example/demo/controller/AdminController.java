@@ -72,6 +72,13 @@ public class AdminController {
 
         // パスワードのエンコード
         if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
+            if (admin.getPassword().length() > 64) {
+                result.rejectValue("password", "error.admin", "パスワードは64文字以内で入力してください。");
+                model.addAttribute("allStores", storeService.getAllStores());
+                model.addAttribute("allRoles", roleService.getAllRoles());
+                model.addAttribute("allPermissions", permissionService.getAllPermissions());
+                return "admin_edit";
+            }
             admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         }
 
@@ -243,6 +250,14 @@ public class AdminController {
         }
 
         if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
+            if (admin.getPassword().length() > 64) {
+                result.rejectValue("password", "error.admin", "パスワードは64文字以内で入力してください。");
+                model.addAttribute("allStores", storeService.getAllStores());
+                model.addAttribute("allRoles", roleService.getAllRoles());
+                model.addAttribute("allPermissions", permissionService.getAllPermissions());
+                model.addAttribute("admin", admin);
+                return "admin_create";
+            }
             admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         }
 
