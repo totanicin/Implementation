@@ -14,6 +14,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "store_products")
@@ -26,6 +27,7 @@ public class StoreProduct {
 
     @ManyToOne
     @JoinColumn(name = "store_id")
+    @ToString.Exclude
     private Store store;
 
     @ManyToOne
@@ -33,10 +35,10 @@ public class StoreProduct {
     private Product product;
 
     @Column(name = "retail_price", nullable = false)
-    private int retailPrice; // int型に変更
+    private int retailPrice;
 
     @Column(name = "stock", nullable = false)
-    private int stock; // int型に変更
+    private int stock;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
@@ -53,5 +55,15 @@ public class StoreProduct {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    @Override
+    public String toString() {
+        return "StoreProduct{id=" + id + 
+                ", product=" + product.getName() + 
+                ", retailPrice=" + retailPrice + 
+                ", stock=" + stock + 
+                ", createdAt=" + createdAt + 
+                ", updatedAt=" + updatedAt + '}';
     }
 }

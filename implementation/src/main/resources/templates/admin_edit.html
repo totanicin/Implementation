@@ -9,41 +9,49 @@
         <input type="hidden" th:field="*{id}" />
         <div>
             <label>店舗名</label>
-            <select th:field="*{store.id}">
+            <select th:field="*{store.id}" required>
                 <option th:each="store : ${allStores}" th:value="${store.id}" th:text="${store.name}"></option>
             </select>
+            <span th:if="${#fields.hasErrors('store.id')}" th:errors="*{store.id}"></span>
         </div>
         <div>
             <label>姓</label>
-            <input type="text" th:field="*{lastName}" />
+            <input type="text" th:field="*{lastName}" required />
+            <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
         </div>
         <div>
             <label>名</label>
-            <input type="text" th:field="*{firstName}" />
+            <input type="text" th:field="*{firstName}" required />
+            <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
         </div>
         <div>
             <label>Email</label>
-            <input type="text" th:field="*{email}" />
+            <input type="email" th:field="*{email}" required />
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
         <div>
             <label>役職</label>
-            <select th:field="*{roles}">
+            <select th:field="*{roles}" required>
                 <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}"></option>
             </select>
+            <span th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
         </div>
         <div>
             <label>権限</label>
-            <select th:field="*{permissions}">
+            <select th:field="*{permissions}" required>
                 <option th:each="permission : ${allPermissions}" th:value="${permission.id}" th:text="${permission.name}"></option>
             </select>
+            <span th:if="${#fields.hasErrors('permissions')}" th:errors="*{permissions}"></span>
         </div>
         <div>
             <label>電話番号</label>
-            <input type="text" th:field="*{phone}" />
+            <input type="text" th:field="*{phone}" required />
+            <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
         </div>
         <div>
             <label>パスワード</label>
-            <input type="password" th:field="*{password}" maxlength="65" />
+            <input type="password" th:field="*{password}" maxlength="64" required />
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
         </div>
         <button type="submit">更新する</button>
     </form>

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity(name = "permissions")
 @Data
@@ -21,6 +22,7 @@ public class Permission {
     private String name;
 
     @ManyToMany(mappedBy = "permissions")
+    @ToString.Exclude
     private Set<Administrator> administrators;
 
     @Override

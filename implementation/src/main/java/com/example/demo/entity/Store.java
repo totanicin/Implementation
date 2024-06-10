@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "stores")
@@ -34,6 +35,7 @@ public class Store {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "store")
+    @ToString.Exclude
     private List<StoreProduct> storeProducts;
 
     @PrePersist
@@ -45,5 +47,14 @@ public class Store {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Store{id=" + id + 
+                ", name='" + name + '\'' + 
+                ", address='" + address + '\'' + 
+                ", createdAt=" + createdAt + 
+                ", updatedAt=" + updatedAt + '}';
     }
 }

@@ -13,11 +13,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -29,29 +31,32 @@ public class Administrator {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     @Size(min = 5, max = 255)
     private String email;
 
-    @Size(min = 8, max = 64) // パスワードのバリデーションを変更
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Last name is required")
     @Size(min = 1, max = 50)
     private String lastName;
 
-    @NotBlank
+    @NotBlank(message = "First name is required")
     @Size(min = 1, max = 50)
     private String firstName;
 
-    @NotBlank
-    @Pattern(regexp = "^[0-9]+$")
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]+$", message = "Phone number must be numeric")
     @Size(min = 10, max = 15)
     private String phone;
 
     @ManyToOne
     @JoinColumn(name = "store_id", nullable = false)
+    @NotNull(message = "Store is required")
+    @ToString.Exclude
     private Store store;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -59,6 +64,8 @@ public class Administrator {
       name = "administrator_roles",
       joinColumns = @JoinColumn(name = "administrator_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @NotNull(message = "Roles are required")
+    @ToString.Exclude
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -66,5 +73,7 @@ public class Administrator {
       name = "administrator_permissions",
       joinColumns = @JoinColumn(name = "administrator_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @NotNull(message = "Permissions are required")
+    @ToString.Exclude
     private Set<Permission> permissions;
 }

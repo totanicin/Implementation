@@ -51,40 +51,7 @@ public class AdminController {
 
     @PostMapping("/admin/register")
     public String registerAdministrator(@Valid Administrator admin, BindingResult result, Model model) {
-        logger.debug("管理者の登録を試みています: {}", admin);
-        if (result.hasErrors()) {
-            logger.debug("バリデーションエラーが見つかりました: {}", result.getAllErrors());
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            return "admin_edit";
-        }
-
-        // store_idの検証
-        if (admin.getStore() == null || admin.getStore().getId() == null || !storeService.existsById(admin.getStore().getId())) {
-            logger.debug("無効な店舗ID: {}", admin.getStore().getId());
-            model.addAttribute("error", "無効な店舗IDです。");
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            return "admin_edit";
-        }
-
-        // パスワードのエンコード
-        if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
-            if (admin.getPassword().length() > 64) {
-                result.rejectValue("password", "error.admin", "パスワードは64文字以内で入力してください。");
-                model.addAttribute("allStores", storeService.getAllStores());
-                model.addAttribute("allRoles", roleService.getAllRoles());
-                model.addAttribute("allPermissions", permissionService.getAllPermissions());
-                return "admin_edit";
-            }
-            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-        }
-
-        adminService.registerOrUpdateAdministrator(admin);
-        logger.debug("管理者が正常に登録されました: {}", admin);
-        return "redirect:/admin/success";
+        return processAdminForm(admin, result, model, "admin_edit");
     }
 
     @GetMapping("/admin/dashboard")
@@ -97,15 +64,7 @@ public class AdminController {
     public String listAdmins(Model model) {
         logger.debug("すべての管理者のリストを取得しています");
         model.addAttribute("admins", adminService.getAllAdmins());
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Administrator admin = adminService.findByEmail(userDetails.getUsername());
-            model.addAttribute("isAdmin", admin != null && admin.getPermissions().stream()
-                .anyMatch(permission -> "管理者".equals(permission.getName())));
-        }
-
+        addCurrentAdminDetailsToModel(model);
         return "admin_list";
     }
 
@@ -114,24 +73,15 @@ public class AdminController {
         logger.debug("管理者の詳細を取得しています。ID: {}", id);
         Administrator admin = adminService.getAdminById(id);
         model.addAttribute("admin", admin);
-
-        // 現在のユーザーが管理者かどうかを確認し、モデルに追加
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Administrator currentAdmin = adminService.findByEmail(userDetails.getUsername());
-            boolean isAdmin = currentAdmin != null && currentAdmin.getPermissions().stream()
-                .anyMatch(permission -> "管理者".equals(permission.getName()));
-            model.addAttribute("isAdmin", isAdmin);
-        }
-
+        addCurrentAdminDetailsToModel(model);
         return "admin_details";
     }
 
     @GetMapping("/admin/edit/{id}")
     public String editAdmin(@PathVariable Long id, Model model) {
         logger.debug("ID: {} の管理者の編集ページに移動します", id);
-        model.addAttribute("admin", adminService.getAdminById(id));
+        Administrator admin = adminService.getAdminById(id);
+        model.addAttribute("admin", admin);
         model.addAttribute("allStores", storeService.getAllStores());
         model.addAttribute("allRoles", roleService.getAllRoles());
         model.addAttribute("allPermissions", permissionService.getAllPermissions());
@@ -140,54 +90,7 @@ public class AdminController {
 
     @PostMapping("/admin/update")
     public String updateAdmin(@Valid Administrator admin, BindingResult result, Model model) {
-        logger.debug("管理者の更新を試みています: {}", admin);
-        if (result.hasErrors()) {
-            logger.debug("バリデーションエラーが見つかりました: {}", result.getAllErrors());
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            model.addAttribute("admin", admin);
-            return "admin_edit";
-        }
-
-        // store_idの検証
-        if (admin.getStore() == null || admin.getStore().getId() == null || !storeService.existsById(admin.getStore().getId())) {
-            logger.debug("無効な店舗ID: {}", admin.getStore().getId());
-            model.addAttribute("error", "無効な店舗IDです。");
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            model.addAttribute("admin", admin);
-            return "admin_edit";
-        }
-
-        // permissionsの検証
-        if (admin.getPermissions() != null) {
-            for (Permission permission : admin.getPermissions()) {
-                if (permission.getId() == null || !permissionService.permissionExistsById(permission.getId())) {
-                    logger.debug("無効な権限ID: {}", permission.getId());
-                    model.addAttribute("error", "無効な権限IDです。");
-                    model.addAttribute("allRoles", roleService.getAllRoles());
-                    model.addAttribute("allPermissions", permissionService.getAllPermissions());
-                    model.addAttribute("admin", admin);
-                    return "admin_edit";
-                }
-            }
-        }
-
-        Administrator existingAdmin = adminService.getAdminById(admin.getId());
-        if (admin.getPassword() == null || admin.getPassword().isEmpty()) {
-            admin.setPassword(existingAdmin.getPassword());
-            logger.debug("パスワードは変更されていません: 既存のパスワードを使用します");
-        } else {
-            String encodedPassword = passwordEncoder.encode(admin.getPassword());
-            logger.debug("新しいパスワードをエンコードしました: {}", encodedPassword);
-            admin.setPassword(encodedPassword);
-        }
-
-        adminService.registerOrUpdateAdministrator(admin);
-        logger.debug("管理者が正常に更新されました: {}", admin);
-        return "redirect:/admin/details/" + admin.getId();
+        return processAdminForm(admin, result, model, "admin_edit");
     }
 
     @GetMapping("/admin/delete/{id}")
@@ -198,7 +101,6 @@ public class AdminController {
         return "redirect:/admin/list";
     }
 
-    // 管理者新規作成画面の表示
     @GetMapping("/admin/create")
     public String showCreateAdminForm(Model model) {
         logger.debug("管理者作成ページに移動します");
@@ -209,60 +111,74 @@ public class AdminController {
         return "admin_create";
     }
 
-    // 管理者新規作成の処理
     @PostMapping("/admin/create")
     public String createAdmin(@Valid Administrator admin, BindingResult result, Model model) {
-        logger.debug("管理者の作成を試みています: {}", admin);
+        return processAdminForm(admin, result, model, "admin_create");
+    }
+
+    private String processAdminForm(Administrator admin, BindingResult result, Model model, String viewName) {
+        logger.debug("管理者の処理を試みています: {}", admin);
         if (result.hasErrors()) {
             logger.debug("バリデーションエラーが見つかりました: {}", result.getAllErrors());
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            model.addAttribute("admin", admin);
-            return "admin_create";
+            prepareAdminFormModel(model, admin);
+            return viewName;
         }
 
-        // store_idの検証
-        if (admin.getStore() == null || admin.getStore().getId() == null || admin.getStore().getId() < 1 || admin.getStore().getId() > 3) {
+        // Store ID validation
+        if (admin.getStore() == null || admin.getStore().getId() == null || !storeService.existsById(admin.getStore().getId())) {
             logger.debug("無効な店舗ID: {}", admin.getStore().getId());
-            result.rejectValue("store", "error.admin", "無効な店舗IDです");
-            model.addAttribute("error", "無効な店舗IDです。");
-            model.addAttribute("allStores", storeService.getAllStores());
-            model.addAttribute("allRoles", roleService.getAllRoles());
-            model.addAttribute("allPermissions", permissionService.getAllPermissions());
-            model.addAttribute("admin", admin);
-            return "admin_create";
+            result.rejectValue("store.id", "error.admin", "無効な店舗IDです");
+            prepareAdminFormModel(model, admin);
+            return viewName;
         }
 
-        // permissionsの検証
+        // Permission ID validation
         if (admin.getPermissions() != null) {
             for (Permission permission : admin.getPermissions()) {
                 if (permission.getId() == null || !permissionService.permissionExistsById(permission.getId())) {
                     logger.debug("無効な権限ID: {}", permission.getId());
-                    model.addAttribute("error", "無効な権限IDです。");
-                    model.addAttribute("allStores", storeService.getAllStores());
-                    model.addAttribute("allRoles", roleService.getAllRoles());
-                    model.addAttribute("allPermissions", permissionService.getAllPermissions());
-                    model.addAttribute("admin", admin);
-                    return "admin_create";
+                    result.rejectValue("permissions", "error.admin", "無効な権限IDです");
+                    prepareAdminFormModel(model, admin);
+                    return viewName;
                 }
             }
         }
 
+        // Password handling
         if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
             if (admin.getPassword().length() > 64) {
                 result.rejectValue("password", "error.admin", "パスワードは64文字以内で入力してください。");
-                model.addAttribute("allStores", storeService.getAllStores());
-                model.addAttribute("allRoles", roleService.getAllRoles());
-                model.addAttribute("allPermissions", permissionService.getAllPermissions());
-                model.addAttribute("admin", admin);
-                return "admin_create";
+                prepareAdminFormModel(model, admin);
+                return viewName;
             }
             admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        } else {
+            Administrator existingAdmin = adminService.getAdminById(admin.getId());
+            admin.setPassword(existingAdmin.getPassword());
         }
 
         adminService.registerOrUpdateAdministrator(admin);
-        logger.debug("管理者が正常に作成されました: {}", admin);
-        return "redirect:/admin/list";
+        logger.debug("管理者が正常に処理されました: {}", admin);
+        return "redirect:/admin/details/" + admin.getId();
+    }
+
+    // 共通の認証チェックロジック
+    private void addCurrentAdminDetailsToModel(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Administrator currentAdmin = adminService.findByEmail(userDetails.getUsername());
+            boolean isAdmin = currentAdmin != null && currentAdmin.getPermissions().stream()
+                .anyMatch(permission -> "管理者".equals(permission.getName()));
+            model.addAttribute("isAdmin", isAdmin);
+        }
+    }
+
+    // 共通のモデル準備ロジック
+    private void prepareAdminFormModel(Model model, Administrator admin) {
+        model.addAttribute("admin", admin);
+        model.addAttribute("allStores", storeService.getAllStores());
+        model.addAttribute("allRoles", roleService.getAllRoles());
+        model.addAttribute("allPermissions", permissionService.getAllPermissions());
     }
 }
