@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>中カテゴリ一覧</title>
+</head>
+<body>
+    <h1>中カテゴリ一覧</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>中カテゴリID</th>
+                <th>中カテゴリ名</th>
+                <th>詳細ボタン</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="subCategory : ${subCategories}">
+                <td th:text="${subCategory.id}">medium_categories.id</td>
+                <td th:text="${subCategory.name}">medium_categories.name</td>
+                <td><a th:href="@{/categories/medium/{id}(id=${subCategory.id})}">詳細を見る</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

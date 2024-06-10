@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理者一覧</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1>管理者一覧</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>管理者ID</th>
+                <th>店舗名</th>
+                <th>姓</th>
+                <th>名</th>
+                <th>Email</th>
+                <th>役職</th>
+                <th>詳細</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="admin : ${admins}">
+                <td th:text="${admin.id}"></td>
+                <td th:text="${admin.store.name}"></td>
+                <td th:text="${admin.lastName}"></td>
+                <td th:text="${admin.firstName}"></td>
+                <td th:text="${admin.email}"></td>
+                <td>
+                    <ul>
+                        <li th:each="role : ${admin.roles}" th:text="${role.name}"></li>
+                    </ul>
+                </td>
+                <td><a th:href="@{/admin/details/{id}(id=${admin.id})}">詳細を見る</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:if="${isAdmin}">
+        <a th:href="@{/admin/create}" class="button">新規作成</a>
+    </div>
+</body>
+</html>

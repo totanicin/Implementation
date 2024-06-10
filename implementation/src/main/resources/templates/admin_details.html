@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>管理者詳細</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function editAdmin(adminId) {
+            location.href = '/admin/edit/' + adminId;
+        }
+
+        function deleteAdmin(adminId) {
+            location.href = '/admin/delete/' + adminId;
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <h1>管理者詳細</h1>
+    <p>管理者ID: <span th:text="${admin.id}"></span></p>
+    <p>店舗名: <span th:text="${admin.store.name}"></span></p>
+    <p>姓: <span th:text="${admin.lastName}"></span></p>
+    <p>名: <span th:text="${admin.firstName}"></span></p>
+    <p>Email: <span th:text="${admin.email}"></span></p>
+    <p>役職: 
+        <ul>
+            <li th:each="role : ${admin.roles}" th:text="${role.name}"></li>
+        </ul>
+    </p>
+    <p>権限: 
+        <ul>
+            <li th:each="permission : ${admin.permissions}" th:text="${permission.name}"></li>
+        </ul>
+    </p>
+    <p>電話番号: <span th:text="${admin.phone}"></span></p>
+    <div th:if="${isAdmin}">
+        <button th:onclick="|editAdmin(${admin.id})|">編集する</button>
+        <button th:onclick="|deleteAdmin(${admin.id})|">削除する</button>
+    </div>
+</body>
+</html>

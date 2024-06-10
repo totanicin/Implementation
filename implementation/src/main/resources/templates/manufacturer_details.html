@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>メーカ詳細</title>
+</head>
+<body>
+    <h1>メーカ詳細</h1>
+    <div>
+        <p><strong>メーカID:</strong> <span th:text="${manufacturer.id}"></span></p>
+        <p><strong>メーカ名:</strong> <span th:text="${manufacturer.name}"></span></p>
+    </div>
+    <div th:if="${isAdmin}">
+        <a th:href="@{'/manufacturers/' + ${manufacturer.id} + '/edit'}">編集する</a>
+        <form th:action="@{'/manufacturers/' + ${manufacturer.id} + '/delete'}" method="post" style="display:inline;">
+            <button type="submit">削除する</button>
+        </form>
+    </div>
+    <a th:href="@{/manufacturers}">一覧に戻る</a>
+</body>
+</html>

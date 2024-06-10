@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品発注履歴</title>
+</head>
+<body>
+    <h1>商品発注履歴</h1>
+    <p>ログイン中: 管理者 <span th:text="${adminFullName}"></span> | 店舗 <span th:text="${storeName}"></span></p>
+    <div th:each="store : ${stores}">
+        <h2>店舗と発注履歴の一覧</h2>
+        <p>店舗名: <span th:text="${store.name}"></span></p>
+        <p>住所: <span th:text="${store.address}"></span></p>
+        
+        <h3>商品一覧</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>販売価格</th>
+                    <th>在庫数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="storeProduct : ${store.storeProducts}">
+                    <td th:text="${storeProduct.product.name}">商品名</td>
+                    <td th:text="${storeProduct.retailPrice}">販売価格</td>
+                    <td th:text="${storeProduct.stock}">在庫数</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>発注履歴</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>発注ID</th>
+                <th>管理者</th>
+                <th>商品名</th>
+                <th>店舗名</th>
+                <th>発注数</th>
+                <th>合計金額</th>
+                <th>作成日時</th>
+                <th>更新日時</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}">発注ID</td>
+                <td th:text="${order.admin != null ? order.admin.firstName + ' ' + order.admin.lastName : 'N/A'}">管理者</td>
+                <td th:text="${order.product != null ? order.product.name : 'N/A'}">商品名</td>
+                <td th:text="${order.store != null ? order.store.name : 'N/A'}">店舗名</td>
+                <td th:text="${order.quantity}">発注数</td>
+                <td th:text="${order.totalPrice}">合計金額</td>
+                <td th:text="${order.createdAt != null ? #temporals.format(order.createdAt, 'yyyy/MM/dd HH:mm:ss') : 'N/A'}">作成日時</td>
+                <td th:text="${order.updatedAt != null ? #temporals.format(order.updatedAt, 'yyyy/MM/dd HH:mm:ss') : 'N/A'}">更新日時</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
